@@ -1,16 +1,12 @@
-// backend/config/db.js
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      // options are optional for modern mongoose versions
-    });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error("MongoDB connection error:", error.message);
-    process.exit(1);
+const connectDb=async()=>{
+  try{
+    await mongoose.connect(process.env.MONGO_URI)
+    console.log("db connected")
+  }catch (error){
+    console.log(error)
+
   }
-};
-
-export default connectDB;
+}
+export default connectDb
