@@ -7,13 +7,13 @@ export default function Achievements() {
   const [implementedTips, setImplementedTips] = useState([]);
   const [carbonSaved, setCarbonSaved] = useState(0);
 
-  // Load data from localStorage (from Insights)
+ 
   useEffect(() => {
     const savedTips = JSON.parse(localStorage.getItem("implementedTips")) || [];
     setImplementedTips(savedTips);
 
-    // Calculate CO₂ saved (example logic)
-    const savedCO2 = savedTips.length * 8.5; // estimate per tip
+    
+    const savedCO2 = savedTips.length * 8.5; 
     setCarbonSaved(savedCO2);
   }, []);
 

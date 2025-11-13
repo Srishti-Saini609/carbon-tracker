@@ -1,4 +1,3 @@
-// simple API wrapper - replace baseURL with your backend later
 import axios from "axios";
 
 const API = axios.create({

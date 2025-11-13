@@ -1,16 +1,27 @@
 import React from "react";
 import { Button } from "../components/ui/button";
-import { Leaf, BarChart, UserCheck, Users } from "lucide-react";
+import { Leaf, BarChart, UserCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+
 
 export default function HomePage() {
-  const navigate = useNavigate(); // Navigation hook
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token"); 
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); 
+    alert("You’ve been logged out!");
+    navigate("/login");
+  };
 
   return (
     <div className="bg-[#e6f7d9] min-h-screen text-gray-800">
       {/* Navbar */}
-      <nav className="flex justify-between items-center px-10 py-4 bg-[#dff5cf] shadow-sm sticky top-0 z-50">
-        <div
+      
+       {/* <Navbar /> */}
+      {/* <nav className="flex justify-between items-center px-10 py-4 bg-[#dff5cf] shadow-sm sticky top-0 z-50"> */}
+        {/* <div
           className="flex items-center space-x-2 text-[#1a3c1a] font-bold text-xl cursor-pointer"
           onClick={() => navigate("/")}
         >
@@ -18,32 +29,41 @@ export default function HomePage() {
           <span>CarbonTracker</span>
         </div>
 
-        <div className="flex items-center space-x-8">
-          <button
+        <div className="flex items-center space-x-8"> */}
+          {/* <button
             onClick={() => navigate("/")}
             className="text-green-800 font-medium hover:text-green-600"
           >
             Home
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             onClick={() => navigate("/learn")}
             className="text-green-800 font-medium hover:text-green-600"
           >
             Learn
-          </button>
+          </button> */}
 
-          {/* Sign In button (navigates to login) */}
-          <Button
-            onClick={() => navigate("/login")}
-            className="bg-[#c5f53b] text-black font-semibold hover:bg-[#b7f03a]"
-          >
-            Sign In
-          </Button>
-        </div>
-      </nav>
+         
+          {/* {token ? (
+            <Button
+              onClick={handleLogout}
+              className="bg-red-500 text-white font-semibold hover:bg-red-600"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              onClick={() => navigate("/login")}
+              className="bg-[#c5f53b] text-black font-semibold hover:bg-[#b7f03a]"
+            >
+              Sign In
+            </Button>
+          )} */}
+        {/* </div>
+      </nav> */}
 
-      {/* Hero Section */}
+      
       <section className="flex flex-col md:flex-row justify-between items-center px-10 py-20">
         <div className="max-w-xl">
           <h1 className="text-5xl font-extrabold text-[#0f2d0f] mb-6 leading-tight">
@@ -57,15 +77,15 @@ export default function HomePage() {
           </p>
 
           <div className="flex space-x-4">
-           
             <Button
-              onClick={() => navigate("/login")}
+              onClick={() =>
+                token ? navigate("/dashboard") : navigate("/login")
+              }
               className="bg-[#c5f53b] text-black font-semibold hover:bg-[#b7f03a]"
             >
               Start Tracking Today
             </Button>
 
-          
             <Button
               variant="outline"
               onClick={() => navigate("/learn")}
@@ -85,7 +105,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      
       <section className="px-10 py-20 bg-white">
         <h2 className="text-3xl font-bold text-center mb-12 text-[#1a3c1a]">
           Why Choose CarbonTracker?
@@ -110,14 +130,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
+      
       <footer className="bg-[#dff5cf] text-center py-6 mt-10 text-gray-700 font-medium">
-        © {new Date().getFullYear()} carbonTracker. All rights reserved.
+        © {new Date().getFullYear()} CarbonTracker. All rights reserved.
       </footer>
     </div>
   );
 }
-
 
 const FeatureCard = ({ icon, title, desc }) => (
   <div className="bg-[#f3fce9] p-8 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">

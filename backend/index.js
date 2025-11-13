@@ -1,17 +1,26 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./config/db.js";
+import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
 import { protect } from "./middleware/authMiddleware.js";  
+import activityRoutes from "./routes/activityRoutes.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json()); 
+app.use(cors());
 
 
 app.get("/", (req, res) => {
   res.send("Carbon Tracker API is running...");
 });
+
+//Auth routes
+app.use("/api/auth",authRoutes);
+app.use("/api/activities", activityRoutes);
+
 
 
 app.get("/api/me", protect, (req, res) => {

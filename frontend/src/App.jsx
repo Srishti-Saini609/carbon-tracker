@@ -16,17 +16,11 @@ import EnvironmentalImpact from './pages/EnviromentalImpact'
 import HomePage from './pages/HomePage'
 import EmailLoginPage from "./pages/EmailLoginPage";
 import EmailSignupPage from './pages/EmailSignupPage';
-
-
-
-
-
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <Routes>
-
-
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} /> 
         <Route path='/dashboard' element={<Dashboard />} /> 
@@ -41,11 +35,7 @@ function App() {
         <Route path="/homepage" element={<HomePage/>}/>
         <Route path="/emaillogin" element={<EmailLoginPage />} />
         <Route path="/emailsignup" element={<EmailSignupPage/>}/>
-       
-        
-
-
-
+        <Route path="/dashboard"element={ <PrivateRoute><Dashboard /></PrivateRoute>}/>
        
     </Routes>
   )
