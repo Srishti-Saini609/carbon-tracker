@@ -1,44 +1,98 @@
-import React from 'react'
-import {BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
 
+import Navbar from "./components/Navbar";
 
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import Dashboard from './pages/Dashboard'
-import Activities from './pages/Activities'
-import Insights from './pages/Insights'
-import ProgressInsights from "./pages/ProgressInsights";
-import Achievements from './pages/Achievements'
-import Progress from './pages/progress'
-import Learn from './pages/Learn'
-import Guides from './pages/Guides'
-import EnvironmentalImpact from './pages/EnviromentalImpact'
-import HomePage from './pages/HomePage'
-import EmailLoginPage from "./pages/EmailLoginPage";
-import EmailSignupPage from './pages/EmailSignupPage';
-import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./pages/Dashboard";
+import AddActivity from "./pages/AddActivity";
+import Insights from "./pages/Insights";
+import Learn from "./pages/Learn";
+import Achievements from "./pages/Achievements";
+import Progress from "./pages/progress";
+import Leaderboard from "./pages/Leaderboard";
+import Guides from "./pages/Guides";
 
 function App() {
+
+  const [activities, setActivities] = useState([]);
+
+  const fetchActivities = async () => {
+    const res = await axios.get("http://localhost:5000/activities");
+    setActivities(res.data);
+  };
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
   return (
-    <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} /> 
-        <Route path='/dashboard' element={<Dashboard />} /> 
-        <Route path='/activities' element={<Activities/>}/>
-        <Route path='/insights'  element={<Insights/>} />
-        <Route path="/progress" element={<ProgressInsights />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/progress" element={<Progress />} />
-        <Route path="/learn" element={<Learn />} />
-        <Route path="/learn/guides" element={<Guides/>}/>
-        <Route path="/learn/environmental-impact" element={<EnvironmentalImpact />} />
-        <Route path="/homepage" element={<HomePage/>}/>
-        <Route path="/emaillogin" element={<EmailLoginPage />} />
-        <Route path="/emailsignup" element={<EmailSignupPage/>}/>
-        <Route path="/dashboard"element={ <PrivateRoute><Dashboard /></PrivateRoute>}/>
-       
-    </Routes>
-  )
+    <Router>
+
+      <Navbar />
+
+      <div className="container">
+
+        <h1> Carbon Footprint Tracker</h1>
+
+        <Routes>
+
+          <Route
+            path="/"
+            element={
+              <Dashboard
+                activities={activities}
+                fetchActivities={fetchActivities}
+              />
+            }
+          />
+
+
+         
+          <Route
+  path="/progress"
+  element={<Progress activities={activities} />}
+/>
+
+<Route
+ path="/leaderboard"
+ element={<Leaderboard activities={activities} />}
+/>
+
+<Route
+  path="/achievements"
+  element={<Achievements activities={activities} />}
+/>
+<Route path="/guides" element={<Guides />} />
+    <Route
+    path="/add"
+    element={
+      <AddActivity
+        fetchActivities={fetchActivities}
+      />
+    }
+  />
+
+
+           <Route
+    path="/insights"
+    element={<Insights activities={activities} />}
+  />
+
+      <Route
+    path="/learn"
+    element={<Learn activities={activities} />}
+  />
+
+          
+
+        </Routes>
+
+      </div>
+
+    </Router>
+  );
 }
 
-export default App
+export default App;

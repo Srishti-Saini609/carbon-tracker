@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+
 import Footer from "../components/Footer";
 import {
   Lightbulb,
@@ -89,13 +90,13 @@ export default function Insights() {
   const [category, setCategory] = useState("All Categories");
   const [implementedTips, setImplementedTips] = useState([]);
 
-  // ✅ Load saved implemented tips from localStorage
+
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("implementedTips")) || [];
     setImplementedTips(saved);
   }, []);
 
-  // ✅ Save implemented tips when they change
+  
   useEffect(() => {
     localStorage.setItem("implementedTips", JSON.stringify(implementedTips));
   }, [implementedTips]);
@@ -117,7 +118,7 @@ export default function Insights() {
 
   return (
     <>
-      <Navbar />
+     
       <div className="bg-green-50 min-h-screen text-gray-800">
         <div className="max-w-6xl mx-auto px-4 py-10">
           <h1 className="text-4xl font-bold mb-2 text-gray-900">
@@ -134,7 +135,7 @@ export default function Insights() {
               Reduction Tips
             </button>
 
-            {/* ✅ Linked "Your Progress" Tab */}
+           
             <Link
               to="/progress"
               className="px-4 py-2 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300 font-medium"

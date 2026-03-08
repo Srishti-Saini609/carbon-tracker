@@ -17,8 +17,9 @@
   animation: fade-in 0.3s ease-out;
 }
 
-
-
-
-
-
+body{
+background: linear-gradient(135deg,#c5f399,#34623b,#111827);
+font-family: "Segoe UI", sans-serif;
+color: #f9fafb;
+margin:0;
+}

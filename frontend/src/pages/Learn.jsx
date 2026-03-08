@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+
 import Footer from "../components/Footer";
 import { Leaf, Search, ExternalLink } from "lucide-react";
+
 
 const categories = ["All", "Electricity", "Food", "Travel", "General", "Water"];
 const tabs = ["Reduction Tips", "Guides", "Environmental Impact"];
@@ -180,7 +181,7 @@ export default function Learn() {
 
   return (
     <div className="bg-green-50 min-h-screen flex flex-col">
-      <Navbar />
+    
       <main className="flex-1 max-w-7xl mx-auto p-6">
         <div className="text-center mt-10">
           <h1 className="text-4xl font-bold text-green-900 mb-2">
