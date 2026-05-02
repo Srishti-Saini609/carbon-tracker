@@ -61,7 +61,8 @@ const AutoCarbonMeter = ({ onActivityLogged }) => {
           if (timeDiff > 0) {
             const speedKmh = (dist * 1000) / timeDiff * 3.6;
             speedHistory.current.push(speedKmh);
-            const avgSpeed = speedHistory.current.slice(-5).reduce((a, b) => a + b, 0) / 5;
+            const recentSpeeds = speedHistory.current.slice(-5);
+            const avgSpeed = recentSpeeds.reduce((a, b) => a + b, 0) / recentSpeeds.length;
             setSpeed(parseFloat(avgSpeed.toFixed(1)));
             setTravelMode(detectTravelMode(avgSpeed));
           }
@@ -74,7 +75,7 @@ const AutoCarbonMeter = ({ onActivityLogged }) => {
     );
   };
 
-  const stopTracking = () => {
+  const stopTracking = async () => {
     setIsTracking(false);
     
     if (watchId.current) {
@@ -87,7 +88,6 @@ const AutoCarbonMeter = ({ onActivityLogged }) => {
                        travelMode === 'cycling' ? 'cycling' : 'car_petrol';
       
       const activity = {
-        id: Date.now().toString(),
         type: 'travel',
         category,
         value: parseFloat(totalDistance.current.toFixed(3)),
@@ -97,55 +97,48 @@ const AutoCarbonMeter = ({ onActivityLogged }) => {
         date: new Date().toISOString()
       };
 
-      onActivityLogged(activity);
-      alert(`✅ Trip Logged!\n📍 ${totalDistance.current.toFixed(2)} km\n🌱 Zero emission!`);
+      try {
+        await onActivityLogged(activity);
+      } catch {
+        console.error('Failed to save auto-tracked activity');
+      }
     }
   };
 
+  const modeIcons = { idle: '⏸️', walking: '🚶', cycling: '🚴', driving: '🚗' };
+
   return (
-    <div className="card" style={{ textAlign: 'center' }}>
-      <h2 style={{ marginBottom: '16px', color: '#333' }}>🌍 Auto Carbon Meter</h2>
+    <div className="card text-center">
+      <h2 className="text-lg font-bold text-gray-800 mb-5">🌍 Auto Carbon Meter</h2>
       
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(3, 1fr)', 
-        gap: '16px',
-        marginBottom: '20px'
-      }}>
-        <div style={{ padding: '16px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <p style={{ fontSize: '12px', color: '#777' }}>📍 Distance</p>
-          <p style={{ fontSize: '24px', fontWeight: '700', color: '#667eea' }}>
-            {distance.toFixed(2)} km
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 mb-1">📍 Distance</p>
+          <p className="text-2xl font-bold text-indigo-500">
+            {distance.toFixed(2)} <span className="text-sm font-normal">km</span>
           </p>
         </div>
-        <div style={{ padding: '16px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <p style={{ fontSize: '12px', color: '#777' }}>🚀 Speed</p>
-          <p style={{ fontSize: '24px', fontWeight: '700', color: '#f39c12' }}>
-            {speed.toFixed(1)} km/h
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 mb-1">🚀 Speed</p>
+          <p className="text-2xl font-bold text-amber-500">
+            {speed.toFixed(1)} <span className="text-sm font-normal">km/h</span>
           </p>
         </div>
-        <div style={{ padding: '16px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <p style={{ fontSize: '12px', color: '#777' }}>🎯 Mode</p>
-          <p style={{ fontSize: '24px', fontWeight: '700', color: '#27ae60' }}>
-            {travelMode === 'idle' ? '⏸️' : travelMode === 'walking' ? '🚶' : 
-             travelMode === 'cycling' ? '🚴' : '🚗'}
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-500 mb-1">🎯 Mode</p>
+          <p className="text-2xl font-bold text-green-500">
+            {modeIcons[travelMode]}
           </p>
         </div>
       </div>
 
       <button 
         onClick={isTracking ? stopTracking : startTracking}
-        style={{ 
-          width: '100%',
-          padding: '16px',
-          background: isTracking ? '#e74c3c' : '#27ae60',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '18px',
-          fontWeight: '700',
-          cursor: 'pointer'
-        }}
+        className={`w-full py-4 text-white rounded-xl text-lg font-bold transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 ${
+          isTracking 
+            ? 'bg-red-500 hover:bg-red-600 pulse-glow' 
+            : 'bg-green-500 hover:bg-green-600'
+        }`}
       >
         {isTracking ? '⏹️ Stop Tracking' : '▶️ Start Tracking'}
       </button>

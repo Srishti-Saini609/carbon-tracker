@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const CarbonMeterPage = ({ onActivityLogged }) => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
           if (timeDiff > 0) {
             const speedKmh = (dist * 1000) / timeDiff * 3.6;
             speedHistory.current.push(speedKmh);
-            const avgSpeed = speedHistory.current.slice(-5).reduce((a, b) => a + b, 0) / 5;
+            const avgSpeed = speedHistory.current.slice(-5).reduce((a, b) => a + b, 0) / Math.min(speedHistory.current.length, 5);
             setSpeed(parseFloat(avgSpeed.toFixed(1)));
             setTravelMode(detectTravelMode(avgSpeed));
           }
@@ -91,12 +92,14 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
       },
       (err) => {
         if (err.code === 1) setError('Location permission denied');
+        else if (err.code === 2) setError('Location unavailable');
+        else setError('Location request timed out');
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 
-  const stopTracking = () => {
+  const stopTracking = async () => {
     setIsTracking(false);
     
     if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
@@ -107,7 +110,6 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
                        travelMode === 'cycling' ? 'cycling' : 'car_petrol';
       
       const activity = {
-        id: Date.now().toString(),
         type: 'travel',
         category,
         value: parseFloat(totalDistance.current.toFixed(3)),
@@ -117,12 +119,14 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
         date: new Date().toISOString()
       };
 
-      onActivityLogged(activity);
-      alert(`✅ Trip Logged!\n📍 ${totalDistance.current.toFixed(2)} km\n⏱️ ${formatTime(sessionTime)}`);
-      navigate('/');
-    } else {
-      navigate('/');
+      try {
+        await onActivityLogged(activity);
+        alert(`✅ Trip Logged!\n📍 ${totalDistance.current.toFixed(2)} km\n⏱️ ${formatTime(sessionTime)}`);
+      } catch {
+        alert('Failed to save trip. Please try again.');
+      }
     }
+    navigate('/');
   };
 
   useEffect(() => {
@@ -131,15 +135,6 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
-
-  const getModeColor = () => {
-    switch(travelMode) {
-      case 'walking': return '#27ae60';
-      case 'cycling': return '#3498db';
-      case 'driving': return '#e74c3c';
-      default: return '#95a5a6';
-    }
-  };
 
   const getModeIcon = () => {
     switch(travelMode) {
@@ -150,128 +145,74 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
     }
   };
 
+  const getModeLabel = () => {
+    switch(travelMode) {
+      case 'walking': return 'Walking';
+      case 'cycling': return 'Cycling';
+      case 'driving': return 'Driving';
+      default: return 'Idle';
+    }
+  };
+
+  const modeColorClasses = {
+    idle: 'bg-gray-100 text-gray-400',
+    walking: 'bg-green-50 text-green-600',
+    cycling: 'bg-blue-50 text-blue-600',
+    driving: 'bg-red-50 text-red-600',
+  };
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '20px'
-    }}>
-      <div className="container" style={{ maxWidth: '800px' }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '30px'
-        }}>
-          <button 
-            onClick={() => navigate('/')}
-            style={{
-              background: 'rgba(255,255,255,0.2)',
-              border: 'none',
-              color: 'white',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: '600'
-            }}
-          >
-            ← Back
-          </button>
-          <h1 style={{ color: 'white', margin: 0, fontSize: '28px' }}>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600">
+      <Navbar />
+      <div className="max-w-3xl mx-auto px-4 pb-12 page-enter">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white">
             🌍 Auto Carbon Meter
           </h1>
-          <div style={{ width: '80px' }}></div>
+          <p className="text-white/70 mt-2">Track your travel emissions in real-time</p>
         </div>
 
-        <div className="card" style={{ textAlign: 'center', padding: '40px 20px' }}>
+        <div className="card text-center py-10 px-5 fade-in-up">
           {error && (
-            <div style={{ 
-              background: '#fee', 
-              color: '#e74c3c', 
-              padding: '12px', 
-              borderRadius: '8px',
-              marginBottom: '20px'
-            }}>
+            <div className="bg-red-50 text-red-500 p-3 rounded-xl mb-5 font-medium" role="alert">
               ⚠️ {error}
             </div>
           )}
 
-          <div style={{ 
-            fontSize: '48px', 
-            fontWeight: '700', 
-            color: '#333',
-            marginBottom: '10px',
-            fontFamily: 'monospace'
-          }}>
+          <div className="text-5xl font-bold text-gray-800 mb-3 font-mono tracking-wider">
             {formatTime(sessionTime)}
           </div>
 
-          <div style={{ 
-            padding: '16px 32px',
-            background: travelMode === 'idle' ? '#f8f9fa' : `${getModeColor()}20`,
-            borderRadius: '12px',
-            marginBottom: '30px',
-            display: 'inline-block'
-          }}>
-            <p style={{ fontSize: '14px', color: '#777', marginBottom: '4px' }}>Current Mode</p>
-            <p style={{ 
-              fontSize: '32px', 
-              fontWeight: '700',
-              color: travelMode === 'idle' ? '#95a5a6' : getModeColor()
-            }}>
-              {getModeIcon()} {travelMode === 'idle' ? 'Idle' : 
-                             travelMode === 'walking' ? 'Walking' : 
-                             travelMode === 'cycling' ? 'Cycling' : 'Driving'}
+          <div className={`inline-block px-8 py-4 rounded-2xl mb-8 transition-colors duration-300 ${modeColorClasses[travelMode]}`}>
+            <p className="text-sm text-gray-500 mb-1">Current Mode</p>
+            <p className="text-3xl font-bold">
+              {getModeIcon()} {getModeLabel()}
             </p>
           </div>
 
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 1fr)', 
-            gap: '20px',
-            marginBottom: '30px'
-          }}>
-            <div style={{ 
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              padding: '24px',
-              borderRadius: '12px',
-              color: 'white'
-            }}>
-              <p style={{ fontSize: '14px', opacity: 0.9 }}>📍 Distance</p>
-              <p style={{ fontSize: '36px', fontWeight: '700' }}>
-                {distance.toFixed(2)} <span style={{ fontSize: '16px' }}>km</span>
+          <div className="grid grid-cols-2 gap-5 mb-8">
+            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl text-white shadow-lg">
+              <p className="text-sm opacity-90 mb-1">📍 Distance</p>
+              <p className="text-4xl font-bold">
+                {distance.toFixed(2)} <span className="text-base font-normal">km</span>
               </p>
             </div>
 
-            <div style={{ 
-              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-              padding: '24px',
-              borderRadius: '12px',
-              color: 'white'
-            }}>
-              <p style={{ fontSize: '14px', opacity: 0.9 }}>🚀 Speed</p>
-              <p style={{ fontSize: '36px', fontWeight: '700' }}>
-                {speed.toFixed(1)} <span style={{ fontSize: '16px' }}>km/h</span>
+            <div className="bg-gradient-to-br from-pink-400 to-rose-500 p-6 rounded-2xl text-white shadow-lg">
+              <p className="text-sm opacity-90 mb-1">🚀 Speed</p>
+              <p className="text-4xl font-bold">
+                {speed.toFixed(1)} <span className="text-base font-normal">km/h</span>
               </p>
             </div>
           </div>
 
           <button 
             onClick={isTracking ? stopTracking : startTracking}
-            style={{ 
-              width: '100%',
-              maxWidth: '400px',
-              padding: '20px',
-              background: isTracking ? '#e74c3c' : '#27ae60',
-              color: 'white',
-              border: 'none',
-              borderRadius: '12px',
-              fontSize: '24px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
-            }}
+            className={`w-full max-w-md py-5 text-white rounded-2xl text-2xl font-bold cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${
+              isTracking 
+                ? 'bg-red-500 hover:bg-red-600' 
+                : 'bg-green-500 hover:bg-green-600'
+            } ${isTracking ? 'pulse-glow' : ''}`}
           >
             {isTracking ? '⏹️ Stop Tracking' : '▶️ Start Tracking'}
           </button>
