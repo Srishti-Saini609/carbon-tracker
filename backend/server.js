@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import connectDB from './config/db.js';
 import activityRoutes from './routes/activities.js';
 import authRoutes from './routes/auth.js';
+import squadRoutes from './routes/squads.js';
 
 dotenv.config();
 
@@ -69,6 +70,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // Routes
 app.use('/api/activities', activityRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/squads', squadRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Carbon Tracker API is running! 🌱' });

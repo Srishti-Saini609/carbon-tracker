@@ -120,46 +120,52 @@ const GlobalInsightsPage = () => {
   }, [selectedYear]);
 
   return (
-    <div className="pb-12 pt-6">
+    <div className="min-h-screen mesh-gradient">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 page-enter">
-        <div className="mb-10 text-center md:text-left">
-          <h1 className="text-4xl font-extrabold text-slate-800 mb-2">🌍 Global Carbon Insights</h1>
-          <p className="text-slate-600 max-w-2xl">Explore emissions data and trends across 50+ countries from 2000 to 2025.</p>
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 pb-20 page-enter">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tight mb-2">Global Emissions Data</h1>
+            <p className="text-gray-500 font-medium max-w-2xl">Exploring industrial trends and carbon output across 50+ nations from 2000 to 2025.</p>
+          </div>
+          <div className="flex bg-white/50 backdrop-blur-xl p-1.5 rounded-2xl border border-white shadow-sm">
+            <div className="px-4 py-2 text-xs font-bold text-accent-gold bg-accent-gold/10 rounded-xl uppercase tracking-widest">Global Analytics</div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-          <div className="card flex flex-col gap-2">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Select Country</label>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          <div className="card flex flex-col gap-3 py-6 px-8 border-none bg-white/40 shadow-sm">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Select Country</label>
             <select 
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
-              className="input-field py-2"
+              className="bg-transparent border-none text-primary font-black text-lg focus:ring-0 cursor-pointer outline-none"
             >
               {countries.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-          <div className="card flex flex-col gap-2">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Select Year</label>
+          <div className="card flex flex-col gap-3 py-6 px-8 border-none bg-white/40 shadow-sm">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Timeline Year</label>
             <select 
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="input-field py-2"
+              className="bg-transparent border-none text-primary font-black text-lg focus:ring-0 cursor-pointer outline-none"
             >
               {[...Array(26)].map((_, i) => (
                 <option key={2000 + i} value={2000 + i}>{2000 + i}</option>
               ))}
             </select>
           </div>
-          <div className="md:col-span-2 bg-gradient-to-br from-brand-dark to-brand-mid p-8 rounded-3xl text-white shadow-xl flex items-center justify-between hover:scale-[1.02] transition-transform duration-300">
-            <div>
-              <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">{selectedCountry} ({selectedYear})</p>
-              <h3 className="text-4xl font-extrabold pulse-glow">
+          <div className="md:col-span-2 bg-primary p-10 rounded-[3rem] text-white shadow-2xl shadow-primary/20 flex items-center justify-between relative overflow-hidden group hover:scale-[1.02] transition-all duration-500">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700"></div>
+            <div className="relative z-10">
+              <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-3">{selectedCountry} ({selectedYear})</p>
+              <h3 className="text-5xl font-black tracking-tight">
                 {countryData.find(d => d.year === selectedYear)?.perCapita.toFixed(2)} 
-                <span className="text-lg font-normal ml-2 opacity-80">tons/capita</span>
+                <span className="text-lg font-bold ml-2 text-white/30 tracking-normal">tons/capita</span>
               </h3>
             </div>
-            <div className="text-5xl drop-shadow-lg">🌿</div>
+            <div className="text-6xl relative z-10 group-hover:rotate-12 transition-transform duration-500">🌿</div>
           </div>
         </div>
 

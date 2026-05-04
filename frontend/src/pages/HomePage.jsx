@@ -4,15 +4,15 @@ import AutoCarbonMeter from '../components/AutoCarbonMeter';
 import Dashboard from '../components/Dashboard';
 
 const LoadingSkeleton = () => (
-  <div className="space-y-6 animate-pulse">
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+  <div className="space-y-10 animate-pulse">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
       {[1, 2, 3].map(i => (
-        <div key={i} className="h-28 bg-gray-200 rounded-2xl"></div>
+        <div key={i} className="h-40 bg-gray-200/50 rounded-3xl"></div>
       ))}
     </div>
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="h-96 bg-gray-200 rounded-2xl"></div>
-      <div className="h-96 bg-gray-200 rounded-2xl"></div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="h-[30rem] bg-gray-200/50 rounded-[2.5rem]"></div>
+      <div className="h-[30rem] bg-gray-200/50 rounded-[2.5rem]"></div>
     </div>
   </div>
 );
@@ -21,32 +21,30 @@ const HomePage = ({ activities, onAddActivity, onDeleteActivity, loading, error 
   return (
     <div className="pb-12 pt-6">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 page-enter">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
-            🌍 Carbon Footprint Tracker
-          </h1>
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 pb-20 page-enter">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tight mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-gray-500 font-medium">Your sustainability journey is making an impact.</p>
+          </div>
           
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             <Link 
               to="/log-activity"
-              className="btn-primary flex items-center gap-2"
+              className="btn-primary flex items-center gap-3 group"
             >
-              <span className="text-lg">📝</span> Log Activity
+              <span className="text-xl group-hover:rotate-12 transition-transform">📝</span> 
+              <span>Log Activity</span>
             </Link>
             
             <Link 
               to="/meter"
-              className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
+              className="btn-gold flex items-center gap-3 group"
             >
-              <span className="text-lg">🌍</span> Carbon Meter
-            </Link>
-
-            <Link 
-              to="/progress"
-              className="btn-secondary flex items-center gap-2"
-            >
-              <span className="text-lg">📈</span> Progress & Insights
+              <span className="text-xl group-hover:scale-110 transition-transform">🌍</span> 
+              <span>Carbon Meter</span>
             </Link>
           </div>
         </div>

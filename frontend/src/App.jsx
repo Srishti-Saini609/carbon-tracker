@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import * as apiService from './services/api';
 
@@ -8,11 +8,14 @@ import HomePage from './pages/HomePage';
 import CarbonMeterPage from './pages/CarbonMeterPage';
 import LogActivityPage from './pages/LogActivityPage';
 import ProgressPage from './pages/ProgressPage';
+import AICoach from './components/AICoach';
+import SquadsPage from './pages/SquadsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import GlobalInsightsPage from './pages/GlobalInsightsPage';
 
 function AppContent() {
+  const { user } = useAuth();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -111,7 +114,16 @@ function AppContent() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/squads" 
+          element={
+            <ProtectedRoute>
+              <SquadsPage />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
+      {user && <AICoach activities={activities} />}
     </div>
   );
 }

@@ -34,38 +34,40 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md page-enter">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">🌱 CarbonTracker</h1>
-          <p className="text-white/80">Start your journey to a greener future</p>
+    <div className="min-h-screen flex items-center justify-center p-6 mesh-gradient">
+      <div className="w-full max-w-[520px] page-enter">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/50 backdrop-blur-xl rounded-2xl border border-white shadow-sm mb-6">
+            <span className="text-2xl">🌱</span>
+            <span className="text-xl font-black text-primary tracking-tight">CarbonTracker</span>
+          </div>
+          <h1 className="text-4xl font-black text-primary mb-3 tracking-tight">Join the Mission</h1>
+          <p className="text-gray-500 font-medium">Start your journey towards a sustainable future.</p>
         </div>
 
-        <div className="card p-8">
-          <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">Create Account</h2>
-          
+        <div className="card p-10 shadow-2xl shadow-primary/5">
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-xl mb-4 text-sm text-center font-medium fade-in-up" role="alert">
+            <div className="bg-red-50 text-red-600 p-4 rounded-2xl mb-6 text-sm text-center font-bold border border-red-100 fade-in-up" role="alert">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="register-name" className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+              <label htmlFor="register-name" className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Full Name</label>
               <input 
                 id="register-name"
                 type="text" 
                 className="input-field" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                placeholder="Your name"
+                placeholder="John Doe"
                 required
                 autoComplete="name"
               />
             </div>
             <div>
-              <label htmlFor="register-email" className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+              <label htmlFor="register-email" className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Email Address</label>
               <input 
                 id="register-email"
                 type="email" 
@@ -78,14 +80,14 @@ const RegisterPage = () => {
               />
             </div>
             <div>
-              <label htmlFor="register-password" className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+              <label htmlFor="register-password" className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Secure Password</label>
               <input 
                 id="register-password"
                 type="password" 
                 className="input-field" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                placeholder="Min. 6 characters"
+                placeholder="••••••••"
                 required 
                 minLength="6"
                 autoComplete="new-password"
@@ -94,22 +96,22 @@ const RegisterPage = () => {
             <button 
               type="submit" 
               disabled={loading}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed mt-4"
             >
               {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin-slow inline-block"></span>
-                  Creating Account...
+                <span className="flex items-center justify-center gap-3">
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spin-slow inline-block"></span>
+                  Processing...
                 </span>
-              ) : 'Register'}
+              ) : 'Create Account'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+          <div className="mt-8 text-center pt-8 border-t border-gray-100">
+            <p className="text-sm text-gray-500 font-medium">
               Already have an account?{' '}
-              <Link to="/login" className="text-brand-dark font-semibold hover:text-brand-light transition-colors">
-                Login
+              <Link to="/login" className="text-primary font-black hover:text-accent-green transition-colors">
+                Sign In
               </Link>
             </p>
           </div>

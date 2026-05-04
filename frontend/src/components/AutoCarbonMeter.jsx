@@ -108,40 +108,45 @@ const AutoCarbonMeter = ({ onActivityLogged }) => {
   const modeIcons = { idle: '⏸️', walking: '🚶', cycling: '🚴', driving: '🚗' };
 
   return (
-    <div className="card text-center">
-      <h2 className="text-lg font-bold text-gray-800 mb-5">🌍 Auto Carbon Meter</h2>
+    <div className="card overflow-hidden relative group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-accent-green/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
       
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 mb-1">📍 Distance</p>
-          <p className="text-2xl font-bold text-indigo-500">
-            {distance.toFixed(2)} <span className="text-sm font-normal">km</span>
-          </p>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+        <div className="text-left">
+          <h2 className="text-2xl font-black text-primary tracking-tight mb-2">Auto Carbon Meter</h2>
+          <p className="text-gray-400 text-sm font-medium">Real-time GPS emission intelligence</p>
         </div>
-        <div className="p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 mb-1">🚀 Speed</p>
-          <p className="text-2xl font-bold text-amber-500">
-            {speed.toFixed(1)} <span className="text-sm font-normal">km/h</span>
-          </p>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 mb-1">🎯 Mode</p>
-          <p className="text-2xl font-bold text-green-500">
-            {modeIcons[travelMode]}
-          </p>
-        </div>
-      </div>
 
-      <button 
-        onClick={isTracking ? stopTracking : startTracking}
-        className={`w-full py-4 text-white rounded-xl text-lg font-bold transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 ${
-          isTracking 
-            ? 'bg-red-500 hover:bg-red-600 pulse-glow' 
-            : 'bg-green-500 hover:bg-green-600'
-        }`}
-      >
-        {isTracking ? '⏹️ Stop Tracking' : '▶️ Start Tracking'}
-      </button>
+        <div className="flex-1 w-full grid grid-cols-3 gap-4">
+          <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+            <p className="text-[10px] font-black tracking-widest uppercase text-gray-400 mb-1">Distance</p>
+            <p className="text-xl font-black text-primary">
+              {distance.toFixed(2)} <span className="text-[10px] text-gray-400">km</span>
+            </p>
+          </div>
+          <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 text-center">
+            <p className="text-[10px] font-black tracking-widest uppercase text-gray-400 mb-1">Velocity</p>
+            <p className="text-xl font-black text-primary">
+              {speed.toFixed(1)} <span className="text-[10px] text-gray-400">km/h</span>
+            </p>
+          </div>
+          <div className="p-4 bg-accent-green/10 rounded-2xl border border-accent-green/20 text-center">
+            <p className="text-[10px] font-black tracking-widest uppercase text-accent-green mb-1">Status</p>
+            <p className="text-xl">{modeIcons[travelMode]}</p>
+          </div>
+        </div>
+
+        <button 
+          onClick={isTracking ? stopTracking : startTracking}
+          className={`w-full md:w-auto px-10 py-4 text-white rounded-2xl text-lg font-black tracking-tight transition-all duration-300 shadow-xl ${
+            isTracking 
+              ? 'bg-red-500 shadow-red-500/20 hover:bg-red-600' 
+              : 'bg-primary shadow-primary/20 hover:bg-slate-800'
+          } hover:-translate-y-0.5 active:translate-y-0`}
+        >
+          {isTracking ? 'Stop Tracking' : 'Start Meter'}
+        </button>
+      </div>
     </div>
   );
 };

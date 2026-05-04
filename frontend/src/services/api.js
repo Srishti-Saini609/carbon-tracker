@@ -20,13 +20,18 @@ const getAuthHeaders = () => {
 // Centralized response handler with 401 auto-logout
 const handleResponse = async (response) => {
   if (response.status === 401) {
-    // Token expired or invalid — force logout
     localStorage.removeItem('carbon_user');
     window.location.href = '/login';
     throw new Error('Session expired. Please login again.');
   }
 
-  const data = await response.json();
+  let data;
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    data = await response.json();
+  } else {
+    data = { message: await response.text() || `Request failed with status ${response.status}` };
+  }
 
   if (!response.ok) {
     throw new Error(data.error || data.message || `Request failed (${response.status})`);
@@ -105,6 +110,37 @@ export const addBulkActivities = async (activitiesArray) => {
 export const deleteActivity = async (id) => {
   const response = await fetchWithRetry(`${API_URL}/${id}`, {
     method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(response);
+};
+
+const SQUADS_URL = '/api/squads';
+
+// ─── Squads ──────────────────────────────────────────────────
+
+export const fetchSquads = async () => {
+  const response = await fetchWithRetry(SQUADS_URL, { headers: getAuthHeaders() });
+  return handleResponse(response);
+};
+
+export const createSquad = async (squadData) => {
+  const response = await fetchWithRetry(SQUADS_URL, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(squadData),
+  });
+  return handleResponse(response);
+};
+
+export const getSquadById = async (id) => {
+  const response = await fetchWithRetry(`${SQUADS_URL}/${id}`, { headers: getAuthHeaders() });
+  return handleResponse(response);
+};
+
+export const joinSquad = async (id) => {
+  const response = await fetchWithRetry(`${SQUADS_URL}/${id}/join`, {
+    method: 'POST',
     headers: getAuthHeaders(),
   });
   return handleResponse(response);

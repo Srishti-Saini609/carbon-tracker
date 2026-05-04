@@ -227,68 +227,95 @@ const ProgressPage = ({ activities }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-dark to-brand-light">
+    <div className="min-h-screen mesh-gradient">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 page-enter">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 pb-20 page-enter">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">📊 Progress & Insights</h1>
-          <p className="text-white/70 mt-2">Your sustainability journey at a glance</p>
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tight mb-2">Progress & Insights</h1>
+            <p className="text-gray-500 font-medium">Visualizing your journey towards sustainability.</p>
+          </div>
+          <div className="flex bg-white/50 backdrop-blur-xl p-1.5 rounded-2xl border border-white shadow-sm">
+            <div className="px-4 py-2 text-xs font-bold text-accent-green bg-accent-green/10 rounded-xl">Stable Impact</div>
+          </div>
         </div>
 
         {/* Streak & Offset Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
           {/* Streak Counter */}
-          <div className="card p-6 bg-gradient-to-br from-amber-400 to-orange-500 text-white border-0 fade-in-up stagger-1">
-            <p className="text-sm opacity-90 mb-2">🔥 Current Streak</p>
-            <h2 className="text-5xl font-bold">{streak}</h2>
-            <p className="text-sm opacity-90">days in a row</p>
+          <div className="bg-primary p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl shadow-primary/20 fade-in-up stagger-1">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700"></div>
+            <p className="text-[10px] font-black tracking-widest uppercase opacity-50 mb-4">Current Streak</p>
+            <div className="flex items-baseline gap-3">
+              <h2 className="text-6xl font-black">{streak}</h2>
+              <span className="text-sm font-bold opacity-40 uppercase tracking-widest">Days</span>
+            </div>
             {streak >= 7 && (
-              <p className="text-xs mt-3 bg-white/20 p-2 rounded-lg text-center">🏆 On Fire! Keep it up!</p>
+              <div className="mt-6 inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+                <span className="text-xl">🏆</span>
+                <span className="text-xs font-black uppercase tracking-widest">Master Consistency</span>
+              </div>
             )}
           </div>
-
+ 
           {/* Carbon Offset */}
-          <div className="card p-6 bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 fade-in-up stagger-2">
-            <p className="text-sm opacity-90 mb-2">🌳 Trees to Offset</p>
-            <h2 className="text-5xl font-bold">{treesNeeded}</h2>
-            <p className="text-sm opacity-90">trees needed</p>
-            <p className="text-xs mt-3 bg-white/20 p-2 rounded-lg text-center">
-              1 tree absorbs ~25 kg CO₂e/year
-            </p>
+          <div className="bg-accent-green p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl shadow-accent-green/20 fade-in-up stagger-2">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700"></div>
+            <p className="text-[10px] font-black tracking-widest uppercase opacity-60 mb-4">Tree Offset Equivalent</p>
+            <div className="flex items-baseline gap-3">
+              <h2 className="text-6xl font-black">{treesNeeded}</h2>
+              <span className="text-sm font-bold opacity-50 uppercase tracking-widest">Trees</span>
+            </div>
+            <div className="mt-6 inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+              <span className="text-xs font-black uppercase tracking-widest">1 Tree ≈ 25kg CO₂e/yr</span>
+            </div>
           </div>
-
+ 
           {/* Monthly Change */}
-          <div className={`card p-6 text-white border-0 fade-in-up stagger-3 ${
+          <div className={`p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl fade-in-up stagger-3 ${
             parseFloat(percentageChange) <= 0 
-              ? 'bg-gradient-to-br from-green-500 to-emerald-600' 
-              : 'bg-gradient-to-br from-red-500 to-rose-600'
+              ? 'bg-accent-gold shadow-accent-gold/20' 
+              : 'bg-red-500 shadow-red-500/20'
           }`}>
-            <p className="text-sm opacity-90 mb-2">📈 vs Last Month</p>
-            <h2 className="text-5xl font-bold">
-              {parseFloat(percentageChange) <= 0 ? '↓' : '↑'} {Math.abs(percentageChange)}%
-            </h2>
-            <p className="text-sm opacity-90">
-              {parseFloat(percentageChange) <= 0 ? 'Great! You improved!' : 'Can do better!'}
-            </p>
-            <p className="text-xs mt-3 opacity-80">
-              This month: {currentMonth.co2e} kg | Last: {lastMonth?.co2e || 0} kg
-            </p>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700"></div>
+            <p className="text-[10px] font-black tracking-widest uppercase opacity-60 mb-4">Monthly Momentum</p>
+            <div className="flex items-baseline gap-3">
+              <h2 className="text-6xl font-black">
+                {parseFloat(percentageChange) <= 0 ? '↓' : '↑'}{Math.abs(percentageChange)}%
+              </h2>
+            </div>
+            <div className="mt-6 inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+              <span className="text-xs font-black uppercase tracking-widest">
+                {parseFloat(percentageChange) <= 0 ? 'Positive Progress' : 'Needs Optimization'}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Weekly Progress Chart */}
-        <div className="card p-6 mb-6 fade-in-up stagger-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-5">📈 Weekly Progress</h2>
-          <div className="flex items-end gap-2 sm:gap-3 h-[200px]">
+        <div className="card mb-12 fade-in-up stagger-4">
+          <div className="flex justify-between items-center mb-10">
+            <h2 className="text-xl font-black text-primary tracking-tight">Weekly Trajectory</h2>
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-accent-green"></div>
+              <div className="w-3 h-3 rounded-full bg-accent-gold"></div>
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            </div>
+          </div>
+          <div className="flex items-end gap-3 sm:gap-6 h-[250px] px-2">
             {weeklyData.map((week, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center">
-                <div 
-                  className={`w-full rounded-t-lg transition-all duration-500 ${getBarColor(parseFloat(week.co2e))}`}
-                  style={{ height: `${Math.max((parseFloat(week.co2e) / maxCO2) * 150, 4)}px` }}
-                ></div>
-                <p className="text-xs text-gray-600 mt-2 text-center font-medium">{week.day}</p>
-                <p className="text-[10px] text-gray-400">{week.co2e} kg</p>
+              <div key={i} className="flex-1 flex flex-col items-center group">
+                <div className="relative w-full flex justify-center">
+                  <div 
+                    className={`w-full max-w-[40px] rounded-2xl transition-all duration-700 shadow-lg ${getBarColor(parseFloat(week.co2e))} group-hover:scale-x-110 group-hover:brightness-110`}
+                    style={{ height: `${Math.max((parseFloat(week.co2e) / maxCO2) * 200, 8)}px` }}
+                  ></div>
+                  <div className="absolute -top-10 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    {week.co2e} kg
+                  </div>
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-4">{week.day}</p>
               </div>
             ))}
           </div>
@@ -352,47 +379,50 @@ const ProgressPage = ({ activities }) => {
         </div>
 
         {/* Community Leaderboard */}
-        <div className="card p-6 mb-6 fade-in-up">
-          <h2 className="text-lg font-bold text-gray-800 mb-2">🌍 Community Leaderboard</h2>
-          <p className="text-gray-500 text-xs mb-4">
-            Lower CO₂e = Better Rank! Based on {list.length} activities from your community.
-          </p>
+        <div className="card mb-12 fade-in-up">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+              <h2 className="text-2xl font-black text-primary tracking-tight">Global Rankings</h2>
+              <p className="text-gray-400 text-sm font-medium mt-1">Comparing your impact with the community.</p>
+            </div>
+            <div className="px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 text-xs font-bold text-gray-500">
+              {list.length} Records Analyzed
+            </div>
+          </div>
           
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {leaderboard.map((player, i) => (
               <div 
                 key={i} 
-                className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-200 ${
+                className={`flex items-center gap-5 p-5 rounded-[2rem] transition-all duration-300 ${
                   player.isYou 
-                    ? 'bg-gradient-to-r from-brand-dark to-brand-light text-white scale-[1.02] shadow-lg' 
-                    : i < 3 
-                      ? 'bg-gradient-to-r from-yellow-50 to-white border-2 border-yellow-300'
-                      : 'bg-gray-50 border-2 border-transparent'
-                } hover:scale-[1.01]`}
+                    ? 'bg-primary text-white shadow-2xl shadow-primary/20 scale-[1.02] border-none' 
+                    : 'bg-white border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50'
+                }`}
               >
-                <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-lg shadow-md ${
-                  player.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-amber-500' :
-                  player.rank === 2 ? 'bg-gradient-to-br from-gray-400 to-gray-500' :
-                  player.rank === 3 ? 'bg-gradient-to-br from-orange-400 to-orange-600' :
-                  'bg-gray-200'
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl shadow-sm ${
+                  player.rank === 1 ? 'bg-accent-gold text-white' :
+                  player.rank === 2 ? 'bg-gray-200 text-gray-500' :
+                  player.rank === 3 ? 'bg-orange-100 text-orange-600' :
+                  player.isYou ? 'bg-white/10 text-white' : 'bg-gray-50 text-gray-400'
                 }`}>
-                  {player.rank === 1 ? '👑' : player.rank === 2 ? '🥈' : player.rank === 3 ? '🥉' : player.rank}
+                  {player.rank === 1 ? '🥇' : player.rank === 2 ? '🥈' : player.rank === 3 ? '🥉' : player.rank}
                 </div>
                 
                 <div className="flex-1">
-                  <p className="font-bold text-sm">
-                    {player.name} {player.isYou && '👤'}
+                  <p className="font-black text-sm tracking-tight">
+                    {player.name} {player.isYou && <span className="ml-1 text-[10px] bg-accent-green px-1.5 py-0.5 rounded uppercase">You</span>}
                   </p>
-                  <p className="text-xs opacity-80">
-                    {player.activities} activities logged
+                  <p className={`text-xs font-medium ${player.isYou ? 'text-white/50' : 'text-gray-400'}`}>
+                    {player.activities} Milestones
                   </p>
                 </div>
                 
                 <div className="text-right">
-                  <p className={`font-bold text-lg ${player.isYou ? 'text-green-300' : 'text-red-500'}`}>
+                  <p className={`text-xl font-black ${player.isYou ? 'text-accent-green' : 'text-primary'}`}>
                     {player.co2e}
                   </p>
-                  <p className="text-[10px] opacity-80">kg CO₂e</p>
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${player.isYou ? 'text-white/40' : 'text-gray-300'}`}>kg CO₂e</p>
                 </div>
               </div>
             ))}

@@ -162,60 +162,107 @@ const CarbonMeterPage = ({ onActivityLogged }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600">
+    <div className="min-h-screen mesh-gradient">
       <Navbar />
-      <div className="max-w-3xl mx-auto px-4 pb-12 page-enter">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">
-            🌍 Auto Carbon Meter
-          </h1>
-          <p className="text-white/70 mt-2">Track your travel emissions in real-time</p>
+      <div className="max-w-4xl mx-auto px-6 sm:px-10 pb-20 page-enter">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tight mb-2">Live Carbon Meter</h1>
+            <p className="text-gray-500 font-medium">Real-time emission intelligence for your journey.</p>
+          </div>
+          <div className="flex bg-white/50 backdrop-blur-xl p-1.5 rounded-2xl border border-white shadow-sm">
+            <div className={`px-4 py-2 text-xs font-bold rounded-xl transition-all duration-500 ${isTracking ? 'bg-accent-green/10 text-accent-green animate-pulse' : 'bg-gray-100 text-gray-400'}`}>
+              {isTracking ? '📡 System Active' : '⚪ System Standby'}
+            </div>
+          </div>
         </div>
 
-        <div className="card text-center py-10 px-5 fade-in-up">
-          {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded-xl mb-5 font-medium" role="alert">
-              ⚠️ {error}
-            </div>
-          )}
+        <div className="card overflow-hidden relative p-0 fade-in-up">
+          <div className="p-12 text-center relative z-10">
+            {error && (
+              <div className="bg-red-50 text-red-500 p-4 rounded-2xl mb-8 font-bold border border-red-100 text-sm" role="alert">
+                ⚠️ {error}
+              </div>
+            )}
 
-          <div className="text-5xl font-bold text-gray-800 mb-3 font-mono tracking-wider">
-            {formatTime(sessionTime)}
-          </div>
-
-          <div className={`inline-block px-8 py-4 rounded-2xl mb-8 transition-colors duration-300 ${modeColorClasses[travelMode]}`}>
-            <p className="text-sm text-gray-500 mb-1">Current Mode</p>
-            <p className="text-3xl font-bold">
-              {getModeIcon()} {getModeLabel()}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-5 mb-8">
-            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl text-white shadow-lg">
-              <p className="text-sm opacity-90 mb-1">📍 Distance</p>
-              <p className="text-4xl font-bold">
-                {distance.toFixed(2)} <span className="text-base font-normal">km</span>
-              </p>
+            <div className="mb-12">
+              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-gray-400 mb-4 block">Session Duration</span>
+              <div className="text-7xl font-black text-primary tracking-tighter">
+                {formatTime(sessionTime)}
+              </div>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-400 to-rose-500 p-6 rounded-2xl text-white shadow-lg">
-              <p className="text-sm opacity-90 mb-1">🚀 Speed</p>
-              <p className="text-4xl font-bold">
-                {speed.toFixed(1)} <span className="text-base font-normal">km/h</span>
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-gray-50/50 p-8 rounded-[2.5rem] border border-gray-100 group hover:bg-white hover:shadow-xl transition-all duration-500">
+                <p className="text-[10px] font-black tracking-widest uppercase text-gray-400 mb-4">Travel Mode</p>
+                <div className="flex flex-col items-center gap-3">
+                  <span className="text-5xl group-hover:scale-110 transition-transform duration-500">{getModeIcon()}</span>
+                  <span className={`text-lg font-black tracking-tight ${modeColorClasses[travelMode].split(' ')[1]}`}>
+                    {getModeLabel()}
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-primary p-8 rounded-[2.5rem] text-white shadow-2xl shadow-primary/20 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                <p className="text-[10px] font-black tracking-widest uppercase text-white/40 mb-4">Distance Covered</p>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-5xl font-black">{distance.toFixed(2)}</span>
+                  <span className="text-sm font-bold text-white/30">km</span>
+                </div>
+              </div>
+
+              <div className="bg-accent-gold p-8 rounded-[2.5rem] text-white shadow-2xl shadow-accent-gold/20 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                <p className="text-[10px] font-black tracking-widest uppercase text-white/60 mb-4">Est. Emissions</p>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-5xl font-black">
+                    {((travelMode === 'walking' || travelMode === 'cycling') ? 0 : (distance * 0.192)).toFixed(2)}
+                  </span>
+                  <span className="text-sm font-bold text-white/50">kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center gap-6">
+              <button 
+                onClick={isTracking ? stopTracking : startTracking}
+                className={`w-full max-w-md py-6 rounded-[2rem] text-xl font-black tracking-tight transition-all duration-500 shadow-2xl ${
+                  isTracking 
+                    ? 'bg-red-500 text-white shadow-red-500/30 hover:bg-red-600' 
+                    : 'bg-accent-green text-white shadow-accent-green/30 hover:bg-emerald-600'
+                } hover:-translate-y-1 hover:shadow-3xl active:translate-y-0`}
+              >
+                {isTracking ? 'Stop Intelligence' : 'Initialize Tracking'}
+              </button>
+              
+              <div className="flex items-center gap-4 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-accent-green"></div> GPS Optimized
+                </span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-accent-gold"></div> Low Battery Impact
+                </span>
+              </div>
             </div>
           </div>
 
-          <button 
-            onClick={isTracking ? stopTracking : startTracking}
-            className={`w-full max-w-md py-5 text-white rounded-2xl text-2xl font-bold cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${
-              isTracking 
-                ? 'bg-red-500 hover:bg-red-600' 
-                : 'bg-green-500 hover:bg-green-600'
-            } ${isTracking ? 'pulse-glow' : ''}`}
-          >
-            {isTracking ? '⏹️ Stop Tracking' : '▶️ Start Tracking'}
-          </button>
+          <div className="bg-gray-50/50 p-8 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-xl">🛰️</div>
+              <div>
+                <p className="text-xs font-black text-primary tracking-tight">System Status</p>
+                <p className="text-[10px] font-medium text-gray-400">High-precision geolocation engaged</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-xl">🔋</div>
+              <div>
+                <p className="text-xs font-black text-primary tracking-tight">Energy Profile</p>
+                <p className="text-[10px] font-medium text-gray-400">Optimized background processing</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
